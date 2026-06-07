@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma generate:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npx next lint:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pip install:*)",
+      "Bash(apt-get update:*)",
+      "Bash(apt-get install:*)",
+      "Bash(pandoc:*)",
+      "Bash(npx tsx:*)",
+      "WebSearch",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}

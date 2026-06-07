@@ -1,0 +1,246 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Base User model
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  nama          String
+  tanggalLahir  DateTime
+  jenisKelamin  String
+  nomorTelepon  String
+  alamat        String?
+  role          UserRole
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  masyarakat    Masyarakat?
+  perawat       Perawat?
+}
+
+enum UserRole {
+  MASYARAKAT
+  PERAWAT
+}
+
+// Masyarakat specific data
+model Masyarakat {
+  id                String              @id @default(cuid())
+  userId            String              @unique
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  tekananDarah      TekananDarah[]
+  manajemenStress   ManajemenStress[]
+  controlKolesterol ControlKolesterol[]
+  sesiRelaksasi     SesiRelaksasi[]
+  gameScore         GameScore[]
+  konsultasiAI      KonsultasiAI[]
+  notification      Notification[]
+}
+
+// Perawat specific data
+model Perawat {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nomorSTR       String    @unique
+  spesialisasi   String
+  
+  // Relations
+  artikelKesehatan ArtikelKesehatan[]
+}
+
+// Tekanan Darah
+model TekananDarah {
+  id              String     @id @default(cuid())
+  masyarakatId    String
+  masyarakat      Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  sistolik        Int
+  diastolik       Int
+  denyutNadi      Int
+  tanggalPengukuran DateTime @default(now())
+  catatan         String?
+  kategori        String     // Normal, Prehipertensi, Hipertensi Stage 1, etc
+  createdAt       DateTime   @default(now())
+}
+
+// Artikel Kesehatan
+model ArtikelKesehatan {
+  id          String    @id @default(cuid())
+  perawatId   String
+  perawat     Perawat   @relation(fields: [perawatId], references: [id], onDelete: Cascade)
+  judul       String
+  konten      String    @db.Text
+  kategori    String
+  gambar      String?
+  tags        String?
+  status      ArticleStatus @default(DRAFT)
+  viewCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Manajemen Stress
+model ManajemenStress {
+  id              String     @id @default(cuid())
+  masyarakatId    String
+  masyarakat      Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  levelStress     Int        // 1-10
+  gejala          String?
+  pemicu          String?
+  copingStrategy  String?
+  rekomendasi     String?
+  tanggalPenilaian DateTime @default(now())
+  createdAt       DateTime  @default(now())
+}
+
+// Control Kolesterol
+model ControlKolesterol {
+  id              String     @id @default(cuid())
+  masyarakatId    String
+  masyarakat      Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  totalKolesterol Int
+  ldl             Int
+  hdl             Int
+  trigliserida    Int
+  tanggalPemeriksaan DateTime @default(now())
+  rekomendasi     String?
+  createdAt       DateTime  @default(now())
+}
+
+// Fasilitas Kesehatan
+model FasilitasKesehatan {
+  id            String   @id @default(cuid())
+  nama          String
+  jenis         String   // RS, Klinik, Puskesmas, Apotek
+  alamat        String
+  latitude      Float
+  longitude     Float
+  nomorTelepon  String?
+  jamBuka       String?
+  jamTutup      String?
+  layanan       String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Relaksasi
+model Relaksasi {
+  id          String   @id @default(cuid())
+  judul       String
+  deskripsi   String   @db.Text
+  tipe        TipeRelaksasi
+  durasi      Int      // dalam detik
+  audioUrl    String?
+  videoUrl    String?
+  instruksi   String?  @db.Text
+  createdAt   DateTime @default(now())
+  
+  sesiRelaksasi SesiRelaksasi[]
+}
+
+enum TipeRelaksasi {
+  MEDITASI
+  MUSIK_RELAKSASI
+  GUIDED_BREATHING
+  PROGRESSIVE_RELAXATION
+}
+
+model SesiRelaksasi {
+  id            String     @id @default(cuid())
+  masyarakatId  String
+  masyarakat    Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  relaksasiId   String
+  relaksasi     Relaksasi  @relation(fields: [relaksasiId], references: [id])
+  durasi        Int        // durasi aktual dalam detik
+  selesai       Boolean    @default(false)
+  feedback      String?
+  createdAt     DateTime   @default(now())
+}
+
+// Games Edukasi
+model GameEdukasi {
+  id          String   @id @default(cuid())
+  nama        String
+  deskripsi   String   @db.Text
+  kategori    String   // Nutrisi, Olahraga, Penyakit, etc
+  difficulty  GameDifficulty
+  pertanyaan  Json     // Array of questions
+  createdAt   DateTime @default(now())
+  
+  gameScores  GameScore[]
+}
+
+enum GameDifficulty {
+  MUDAH
+  SEDANG
+  SULIT
+}
+
+model GameScore {
+  id            String      @id @default(cuid())
+  masyarakatId  String
+  masyarakat    Masyarakat  @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  gameId        String
+  game          GameEdukasi @relation(fields: [gameId], references: [id])
+  score         Int
+  waktuSelesai  Int         // dalam detik
+  achievement   String?
+  createdAt     DateTime    @default(now())
+}
+
+// Konsultasi AI
+model KonsultasiAI {
+  id            String     @id @default(cuid())
+  masyarakatId  String
+  masyarakat    Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  topik         String
+  messages      Json       // Array of chat messages
+  status        ConsultationStatus @default(ACTIVE)
+  eskalasi      Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+enum ConsultationStatus {
+  ACTIVE
+  CLOSED
+  ESCALATED
+}
+
+// Notification
+model Notification {
+  id            String     @id @default(cuid())
+  masyarakatId  String
+  masyarakat    Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  judul         String
+  pesan         String
+  tipe          NotificationType
+  dibaca        Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+}
+
+enum NotificationType {
+  REMINDER
+  ALERT
+  INFO
+  WARNING
+}
