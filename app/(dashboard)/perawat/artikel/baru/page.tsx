@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { ClientSelect } from "@/components/ui/client-select"
+import { ImageUpload } from "@/components/perawat/image-upload"
 import { toast } from "@/hooks/use-toast"
 import { ArrowLeft, Save, Send } from "lucide-react"
 
@@ -26,7 +27,7 @@ const artikelSchema = z.object({
   judul: z.string().min(10, "Judul minimal 10 karakter"),
   konten: z.string().min(100, "Konten minimal 100 karakter"),
   kategori: z.string().min(1, "Pilih kategori"),
-  gambar: z.string().url().optional().or(z.literal("")),
+  gambar: z.string().optional().or(z.literal("")),
   tags: z.string().optional(),
 })
 
@@ -176,16 +177,12 @@ export default function ArtikelBaruPage() {
                 name="gambar"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>URL Gambar (Opsional)</FormLabel>
+                    <FormLabel>Gambar (Opsional)</FormLabel>
                     <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://example.com/gambar.jpg"
-                        {...field}
-                      />
+                      <ImageUpload value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormDescription>
-                      Masukkan URL gambar untuk artikel
+                      Unggah gambar untuk artikel (JPG/PNG/WebP/GIF, maks 10 MB)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
