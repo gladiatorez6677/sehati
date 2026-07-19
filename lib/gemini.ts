@@ -3,8 +3,11 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 
-// Get the generative model - using the latest model name
-export const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+// Get the generative model - model terkini (1.5 sudah usang untuk API key baru).
+// Bisa dioverride via env GEMINI_MODEL.
+export const model = genAI.getGenerativeModel({
+  model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+})
 
 // System prompt for health consultation
 export const HEALTH_CONSULTATION_PROMPT = `Anda adalah asisten kesehatan AI yang ramah dan berpengetahuan. Tugas Anda adalah:
@@ -22,6 +25,9 @@ export async function generateHealthResponse(
   topic: string,
   previousMessages?: any[]
 ): Promise<string> {
+  if (!process.env.GEMINI_API_KEY) {
+    return "⚠️ Fitur AI belum dikonfigurasi. API key Gemini belum diatur — silakan hubungi administrator sistem."
+  }
   try {
     // Build conversation history
     let conversationContext = `Topik konsultasi: ${topic}\n\n`
