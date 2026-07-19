@@ -71,10 +71,37 @@ interface CategoryData {
   percentage: number
 }
 
+interface MetricItem {
+  label: string
+  count: number
+  pct: number
+}
+
+interface MetricGroup {
+  total: number
+  items: MetricItem[]
+}
+
+interface Metrics {
+  tekananDarah: MetricGroup
+  stress: MetricGroup
+  kolesterol: MetricGroup
+}
+
+interface ActivityItem {
+  user: string
+  type: string
+  result: string
+  date: string
+  status: string
+}
+
 export default function LaporanPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [healthTrends, setHealthTrends] = useState<HealthTrend[]>([])
   const [categoryData, setCategoryData] = useState<CategoryData[]>([])
+  const [metrics, setMetrics] = useState<Metrics | null>(null)
+  const [activities, setActivities] = useState<ActivityItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [dateRange, setDateRange] = useState("week")
   const [searchQuery, setSearchQuery] = useState("")
@@ -106,6 +133,18 @@ export default function LaporanPage() {
       const categoryData = await categoryResponse.json()
       setCategoryData(categoryData)
 
+      // Fetch health metrics distribution
+      const metricsResponse = await fetch(`/api/laporan/metrics`)
+      if (!metricsResponse.ok) throw new Error("Failed to fetch metrics")
+      const metricsData = await metricsResponse.json()
+      setMetrics(metricsData)
+
+      // Fetch recent activities
+      const activitiesResponse = await fetch(`/api/laporan/activities`)
+      if (!activitiesResponse.ok) throw new Error("Failed to fetch activities")
+      const activitiesData = await activitiesResponse.json()
+      setActivities(activitiesData)
+
     } catch (error) {
       toast({
         title: "Error",
@@ -126,7 +165,7 @@ export default function LaporanPage() {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `laporan-${reportType}-${dateRange}-${format(new Date(), "yyyy-MM-dd")}.pdf`
+      a.download = `laporan-${reportType}-${dateRange}-${format(new Date(), "yyyy-MM-dd")}.txt`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -172,7 +211,7 @@ export default function LaporanPage() {
           <div className="flex gap-2">
             <Button onClick={downloadReport} variant="outline">
               <Download className="mr-2 h-4 w-4" />
-              Export PDF
+              Export Laporan
             </Button>
           </div>
         </div>
@@ -366,83 +405,42 @@ export default function LaporanPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
-            {/* Tekanan Darah */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Heart className="h-4 w-4" />
-                  Tekanan Darah
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Normal</span>
-                    <span className="text-sm font-medium">65%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Prehipertensi</span>
-                    <span className="text-sm font-medium">25%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Hipertensi</span>
-                    <span className="text-sm font-medium">10%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Stress Level */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Brain className="h-4 w-4" />
-                  Level Stres
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Rendah</span>
-                    <span className="text-sm font-medium">40%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Sedang</span>
-                    <span className="text-sm font-medium">45%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Tinggi</span>
-                    <span className="text-sm font-medium">15%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Kolesterol */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
-                  Kolesterol
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Normal</span>
-                    <span className="text-sm font-medium">70%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Borderline</span>
-                    <span className="text-sm font-medium">20%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Tinggi</span>
-                    <span className="text-sm font-medium">10%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {[
+              { title: "Tekanan Darah", Icon: Heart, group: metrics?.tekananDarah },
+              { title: "Level Stres", Icon: Brain, group: metrics?.stress },
+              { title: "Kolesterol", Icon: Shield, group: metrics?.kolesterol },
+            ].map(({ title, Icon, group }) => (
+              <Card key={title}>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    {title}
+                    {group ? (
+                      <span className="ml-auto text-xs text-muted-foreground font-normal">
+                        {group.total} data
+                      </span>
+                    ) : null}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {!group || group.total === 0 ? (
+                    <p className="text-sm text-muted-foreground">Belum ada data</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {group.items.map((it) => (
+                        <div key={it.label} className="flex justify-between">
+                          <span className="text-sm text-muted-foreground">{it.label}</span>
+                          <span className="text-sm font-medium">
+                            {it.pct}%{" "}
+                            <span className="text-muted-foreground font-normal">({it.count})</span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -466,50 +464,46 @@ export default function LaporanPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {/* Sample data - in real app this would come from API */}
-              {[
-                {
-                  user: "Budi Santoso",
-                  type: "Tekanan Darah",
-                  result: "120/80 mmHg",
-                  date: new Date(),
-                  status: "Normal",
-                },
-                {
-                  user: "Siti Nurhaliza",
-                  type: "Manajemen Stres",
-                  result: "Level 7/10",
-                  date: new Date(Date.now() - 3600000),
-                  status: "Perlu Perhatian",
-                },
-                {
-                  user: "Ahmad Dahlan",
-                  type: "Kolesterol",
-                  result: "Total: 180 mg/dL",
-                  date: new Date(Date.now() - 7200000),
-                  status: "Normal",
-                },
-              ].map((activity, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{activity.user}</TableCell>
-                  <TableCell>{activity.type}</TableCell>
-                  <TableCell>{activity.result}</TableCell>
-                  <TableCell>
-                    {format(activity.date, "dd MMM yyyy HH:mm", { locale: id })}
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                        activity.status === "Normal"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {activity.status}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {(() => {
+                const rows = activities.filter((a) =>
+                  searchQuery
+                    ? a.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      a.type.toLowerCase().includes(searchQuery.toLowerCase())
+                    : true
+                )
+                if (rows.length === 0) {
+                  return (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center text-muted-foreground py-6">
+                        {searchQuery
+                          ? "Tidak ada aktivitas yang cocok"
+                          : "Belum ada aktivitas pemeriksaan"}
+                      </TableCell>
+                    </TableRow>
+                  )
+                }
+                return rows.map((activity, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{activity.user}</TableCell>
+                    <TableCell>{activity.type}</TableCell>
+                    <TableCell>{activity.result}</TableCell>
+                    <TableCell>
+                      {format(new Date(activity.date), "dd MMM yyyy HH:mm", { locale: id })}
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                          activity.status === "Normal" || activity.status === "Rendah"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {activity.status}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))
+              })()}
             </TableBody>
             </Table>
           </div>
