@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth/auth-options"
 import { redirect } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, FileText, BarChart, Activity, Bot, Home, FileBarChart, ChevronRight, MapPin } from "lucide-react"
+import { Users, FileText, BarChart, Activity, Bot, Home, FileBarChart, ChevronRight, MapPin, Video } from "lucide-react"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 
@@ -36,6 +36,14 @@ export default async function PerawatDashboard() {
       href: "/perawat/artikel",
       color: "text-green-500",
       bgColor: "bg-green-50 dark:bg-green-900/20",
+    },
+    {
+      title: "Video",
+      description: "Kelola video",
+      icon: Video,
+      href: "/perawat/video-kesehatan",
+      color: "text-cyan-500",
+      bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
     },
     {
       title: "Konsultasi AI",

@@ -244,3 +244,17 @@ enum NotificationType {
   INFO
   WARNING
 }
+
+// Video Kesehatan (dikelola oleh Perawat, ditonton oleh Masyarakat)
+model VideoKesehatan {
+  id          String        @id @default(cuid())
+  judul       String
+  deskripsi   String        @db.Text
+  kategori    String
+  url         String        @db.Text   // path lokal (/video/xxx.mp4) atau URL eksternal (YouTube/mp4)
+  thumbnail   String?       @db.Text
+  status      ArticleStatus @default(PUBLISHED)
+  viewCount   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
