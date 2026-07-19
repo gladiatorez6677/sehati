@@ -62,14 +62,6 @@ export default async function PerawatDashboard() {
       bgColor: "bg-purple-50 dark:bg-purple-900/20",
     },
     {
-      title: "Fasilitas",
-      description: "Fasilitas kesehatan",
-      icon: MapPin,
-      href: "/perawat/fasilitas",
-      color: "text-indigo-500",
-      bgColor: "bg-indigo-50 dark:bg-indigo-900/20",
-    },
-    {
       title: "Laporan",
       description: "Analisis data",
       icon: FileBarChart,

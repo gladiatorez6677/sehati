@@ -55,7 +55,6 @@ const perawatMenuItems = [
   { href: "/perawat/artikel", label: "Manajemen Artikel", icon: FileText },
   { href: "/perawat/video-kesehatan", label: "Manajemen Video", icon: Video },
   { href: "/perawat/laporan", label: "Laporan Kesehatan", icon: BarChart },
-  { href: "/perawat/fasilitas", label: "Fasilitas Kesehatan", icon: Map },
   { href: "/perawat/pengaturan", label: "Pengaturan", icon: Settings },
 ]
 
