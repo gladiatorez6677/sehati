@@ -85,6 +85,7 @@ model ArtikelKesehatan {
   konten      String    @db.Text
   kategori    String
   gambar      String?
+  ebook       String?   @db.Text   // path PDF e-book (opsional), disajikan via /uploads
   tags        String?
   status      ArticleStatus @default(DRAFT)
   viewCount   Int       @default(0)

@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { judul, konten, kategori, gambar, tags, status } = body
+    const { judul, konten, kategori, gambar, ebook, tags, status } = body
 
     // Validation
     if (!judul || !konten || !kategori) {
@@ -79,6 +79,7 @@ export async function POST(req: NextRequest) {
         konten,
         kategori,
         gambar: gambar || null,
+        ebook: ebook || null,
         tags: tags || null,
         status: status || "DRAFT",
       }

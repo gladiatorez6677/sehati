@@ -2,12 +2,20 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, Eye, User, Clock } from "lucide-react"
+import { ArrowLeft, Calendar, Eye, User, Clock, BookOpen } from "lucide-react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
+
+const EbookReader = dynamic(() => import("@/components/masyarakat/ebook-reader"), {
+  ssr: false,
+  loading: () => (
+    <div className="py-8 text-center text-gray-400 text-sm">Memuat pembaca e-book…</div>
+  ),
+})
 
 interface Artikel {
   id: string
@@ -15,6 +23,7 @@ interface Artikel {
   konten: string
   kategori: string
   gambar: string | null
+  ebook: string | null
   tags: string | null
   viewCount: number
   createdAt: string
@@ -157,6 +166,23 @@ export default function ArtikelDetailPage() {
             />
           </CardContent>
         </Card>
+
+        {article.ebook && (
+          <Card className="mt-8">
+            <CardHeader>
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-pink-500" />
+                E-book
+              </h3>
+              <p className="text-sm text-gray-500">
+                Baca materi lengkap dalam bentuk buku — geser per halaman.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <EbookReader url={article.ebook} title={article.judul} />
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="mt-8">
           <CardHeader>

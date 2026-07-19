@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form"
 import { ClientSelect } from "@/components/ui/client-select"
 import { ImageUpload } from "@/components/perawat/image-upload"
+import { EbookUpload } from "@/components/perawat/ebook-upload"
 import { toast } from "@/hooks/use-toast"
 import { ArrowLeft, Save, Send, Archive } from "lucide-react"
 
@@ -28,6 +29,7 @@ const artikelSchema = z.object({
   konten: z.string().min(100, "Konten minimal 100 karakter"),
   kategori: z.string().min(1, "Pilih kategori"),
   gambar: z.string().optional().or(z.literal("")),
+  ebook: z.string().optional().or(z.literal("")),
   tags: z.string().optional(),
 })
 
@@ -47,6 +49,7 @@ export default function ArtikelEditPage() {
       konten: "",
       kategori: "",
       gambar: "",
+      ebook: "",
       tags: "",
     },
   })
@@ -65,6 +68,7 @@ export default function ArtikelEditPage() {
           konten: data.konten,
           kategori: data.kategori,
           gambar: data.gambar || "",
+          ebook: data.ebook || "",
           tags: data.tags || "",
         })
         setCurrentStatus(data.status)
@@ -234,6 +238,24 @@ export default function ArtikelEditPage() {
                     </FormControl>
                     <FormDescription>
                       Unggah gambar untuk artikel (JPG/PNG/WebP/GIF, maks 10 MB)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="ebook"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>E-book PDF (Opsional)</FormLabel>
+                    <FormControl>
+                      <EbookUpload value={field.value} onChange={field.onChange} />
+                    </FormControl>
+                    <FormDescription>
+                      Unggah file PDF (maks 50 MB). Akan tampil sebagai buku yang bisa dibaca
+                      per halaman di sisi masyarakat.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
