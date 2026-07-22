@@ -8,7 +8,7 @@ import * as z from "zod"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { RichTextEditor } from "@/components/perawat/rich-text-editor"
 import {
   Form,
   FormControl,
@@ -189,14 +189,10 @@ export default function ArtikelBaruPage() {
                   <FormItem>
                     <FormLabel>Konten</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Tulis konten artikel di sini..."
-                        className="min-h-[300px]"
-                        {...field}
-                      />
+                      <RichTextEditor value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormDescription>
-                      Anda dapat menggunakan HTML untuk formatting
+                      Gunakan toolbar untuk memformat teks (tebal, judul, daftar, dll) — tanpa perlu menulis kode HTML.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
