@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { ArrowLeft, Users, BarChart3, User } from "lucide-react"
+import { ArrowLeft, Users, BarChart3, User, Download } from "lucide-react"
 import { format } from "date-fns"
 import { id as localeId } from "date-fns/locale"
 
@@ -63,13 +63,22 @@ export default function HasilKuisionerPage() {
         <ArrowLeft className="h-4 w-4 mr-2" /> Kembali
       </Button>
 
-      <div className="mb-6">
-        <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{data.judul}</h1>
-        {data.deskripsi && <p className="mt-1 text-gray-600 dark:text-gray-400">{data.deskripsi}</p>}
-        <div className="mt-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-          <Users className="h-4 w-4 text-pink-500" />
-          <b>{data.totalResponden}</b> responden
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">{data.judul}</h1>
+          {data.deskripsi && <p className="mt-1 text-gray-600 dark:text-gray-400">{data.deskripsi}</p>}
+          <div className="mt-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+            <Users className="h-4 w-4 text-pink-500" />
+            <b>{data.totalResponden}</b> responden
+          </div>
         </div>
+        {data.totalResponden > 0 && (
+          <a href={`/api/kuisioner/${id}/export`}>
+            <Button variant="outline" size="sm" className="shrink-0">
+              <Download className="h-4 w-4 mr-1.5" /> Unduh CSV
+            </Button>
+          </a>
+        )}
       </div>
 
       {data.totalResponden === 0 ? (
