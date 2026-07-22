@@ -32,6 +32,7 @@ import {
   BarChart,
   Settings,
   Video,
+  Pill,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { AppLogo } from "@/components/layout/app-logo"
@@ -40,6 +41,7 @@ const masyarakatMenuItems = [
   { href: "/masyarakat", label: "Dashboard", icon: Home },
   { href: "/masyarakat/video-kesehatan", label: "Video Kesehatan", icon: Video },
   { href: "/masyarakat/tekanan-darah", label: "Tekanan Darah", icon: Heart },
+  { href: "/masyarakat/pengingat-obat", label: "Pengingat Obat", icon: Pill },
   { href: "/masyarakat/artikel", label: "Artikel Kesehatan", icon: FileText },
   { href: "/masyarakat/manajemen-stress", label: "Manajemen Stress", icon: Brain },
   { href: "/masyarakat/kolesterol", label: "Kontrol Kolesterol", icon: Shield },

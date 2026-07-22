@@ -27,6 +27,7 @@ model User {
   // Relations
   masyarakat    Masyarakat?
   perawat       Perawat?
+  pushSubscriptions PushSubscription[]
 }
 
 enum UserRole {
@@ -48,6 +49,7 @@ model Masyarakat {
   gameScore         GameScore[]
   konsultasiAI      KonsultasiAI[]
   notification      Notification[]
+  pengingatObat     PengingatObat[]
 }
 
 // Perawat specific data
@@ -251,6 +253,33 @@ enum NotificationType {
   ALERT
   INFO
   WARNING
+}
+
+// Pengingat Minum Obat (dikelola oleh Masyarakat)
+model PengingatObat {
+  id           String     @id @default(cuid())
+  masyarakatId String
+  masyarakat   Masyarakat @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  namaObat     String
+  dosis        String?
+  catatan      String?    @db.Text
+  jam          String     // daftar "HH:MM" dipisah koma, mis. "07:00,20:00"
+  hari         String     @default("0,1,2,3,4,5,6") // 0=Minggu..6=Sabtu, dipisah koma
+  aktif        Boolean    @default(true)
+  lastFiredKey String?    // penanda "YYYY-MM-DD HH:MM" terakhir dikirim (anti-duplikat)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+// Langganan Web Push (per perangkat/browser)
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique @db.VarChar(512)
+  p256dh    String   @db.VarChar(255)
+  auth      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
 }
 
 // Video Kesehatan (dikelola oleh Perawat, ditonton oleh Masyarakat)

@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { RegisterSW } from "@/components/pwa/register-sw";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SehatKi - Aplikasi Kesehatan Digital",
   description: "Aplikasi Kesehatan Digital untuk Masyarakat Indonesia",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "SehatKi",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ec4899",
 };
 
 export default function RootLayout({
@@ -32,6 +43,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <Toaster />
+          <RegisterSW />
         </AuthProvider>
       </body>
     </html>
