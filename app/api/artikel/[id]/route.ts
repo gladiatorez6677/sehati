@@ -68,7 +68,9 @@ export async function PUT(
     }
 
     const body = await req.json()
-    const { judul, konten, kategori, gambar, ebook, tags, status } = body
+    const { judul, konten, kategori, tipeArtikel, gambar, ebook, tags, status } = body
+
+    const validTipe = ["UTAMA", "PENDUKUNG", "LOKAL"]
 
     // Get perawat ID
     const perawat = await prisma.perawat.findUnique({
@@ -105,6 +107,7 @@ export async function PUT(
         judul,
         konten,
         kategori,
+        ...(validTipe.includes(tipeArtikel) ? { tipeArtikel } : {}),
         gambar: gambar || null,
         ebook: ebook || null,
         tags: tags || null,

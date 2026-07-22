@@ -84,6 +84,7 @@ model ArtikelKesehatan {
   judul       String
   konten      String    @db.Text
   kategori    String
+  tipeArtikel TipeArtikel @default(UTAMA)   // kelompok: Utama / Pendukung / Lokal Berbahasa Daerah
   gambar      String?
   ebook       String?   @db.Text   // path PDF e-book (opsional), disajikan via /uploads
   tags        String?
@@ -97,6 +98,12 @@ enum ArticleStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum TipeArtikel {
+  UTAMA       // Artikel Utama
+  PENDUKUNG   // Artikel Pendukung
+  LOKAL       // Artikel Lokal Berbahasa Daerah
 }
 
 // Manajemen Stress

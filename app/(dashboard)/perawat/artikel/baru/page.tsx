@@ -28,6 +28,7 @@ const artikelSchema = z.object({
   judul: z.string().min(10, "Judul minimal 10 karakter"),
   konten: z.string().min(100, "Konten minimal 100 karakter"),
   kategori: z.string().min(1, "Pilih kategori"),
+  tipeArtikel: z.enum(["UTAMA", "PENDUKUNG", "LOKAL"]),
   gambar: z.string().optional().or(z.literal("")),
   ebook: z.string().optional().or(z.literal("")),
   tags: z.string().optional(),
@@ -45,6 +46,7 @@ export default function ArtikelBaruPage() {
       judul: "",
       konten: "",
       kategori: "",
+      tipeArtikel: "UTAMA",
       gambar: "",
       ebook: "",
       tags: "",
@@ -149,6 +151,32 @@ export default function ArtikelBaruPage() {
                         ]}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tipeArtikel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Jenis Artikel</FormLabel>
+                    <FormControl>
+                      <ClientSelect
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        placeholder="Pilih jenis artikel"
+                        items={[
+                          { value: "UTAMA", label: "Artikel Utama" },
+                          { value: "PENDUKUNG", label: "Artikel Pendukung" },
+                          { value: "LOKAL", label: "Artikel Lokal Berbahasa Daerah" },
+                        ]}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Menentukan pengelompokan tab di halaman artikel masyarakat
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

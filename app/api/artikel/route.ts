@@ -49,7 +49,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { judul, konten, kategori, gambar, ebook, tags, status } = body
+    const { judul, konten, kategori, tipeArtikel, gambar, ebook, tags, status } = body
+
+    const validTipe = ["UTAMA", "PENDUKUNG", "LOKAL"]
+    const tipe = validTipe.includes(tipeArtikel) ? tipeArtikel : "UTAMA"
 
     // Validation
     if (!judul || !konten || !kategori) {
@@ -78,6 +81,7 @@ export async function POST(req: NextRequest) {
         judul,
         konten,
         kategori,
+        tipeArtikel: tipe,
         gambar: gambar || null,
         ebook: ebook || null,
         tags: tags || null,

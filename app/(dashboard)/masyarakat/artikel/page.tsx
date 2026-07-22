@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Search, Calendar, Eye, ChevronRight, FileText } from "lucide-react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
@@ -15,6 +16,7 @@ interface Artikel {
   judul: string
   konten: string
   kategori: string
+  tipeArtikel: "UTAMA" | "PENDUKUNG" | "LOKAL"
   gambar: string | null
   tags: string | null
   viewCount: number
@@ -26,11 +28,18 @@ interface Artikel {
   }
 }
 
+const TIPE_TABS = [
+  { value: "UTAMA", label: "Artikel Utama" },
+  { value: "PENDUKUNG", label: "Artikel Pendukung" },
+  { value: "LOKAL", label: "Lokal Berbahasa Daerah" },
+] as const
+
 export default function ArtikelMasyarakatPage() {
   const [articles, setArticles] = useState<Artikel[]>([])
   const [filteredArticles, setFilteredArticles] = useState<Artikel[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("semua")
+  const [selectedTipe, setSelectedTipe] = useState<"UTAMA" | "PENDUKUNG" | "LOKAL">("UTAMA")
   const [isLoading, setIsLoading] = useState(true)
 
   const categories = [
@@ -49,7 +58,7 @@ export default function ArtikelMasyarakatPage() {
 
   useEffect(() => {
     filterArticles()
-  }, [searchQuery, selectedCategory, articles])
+  }, [searchQuery, selectedCategory, selectedTipe, articles])
 
   const fetchArticles = async () => {
     try {
@@ -68,6 +77,9 @@ export default function ArtikelMasyarakatPage() {
 
   const filterArticles = () => {
     let filtered = articles
+
+    // Filter by tipe artikel (tab kelompok)
+    filtered = filtered.filter(article => article.tipeArtikel === selectedTipe)
 
     // Filter by category
     if (selectedCategory !== "semua") {
@@ -108,6 +120,21 @@ export default function ArtikelMasyarakatPage() {
         </p>
       </div>
 
+      {/* Tabs kelompok artikel */}
+      <Tabs
+        value={selectedTipe}
+        onValueChange={(v) => setSelectedTipe(v as "UTAMA" | "PENDUKUNG" | "LOKAL")}
+        className="mb-6"
+      >
+        <TabsList className="grid w-full grid-cols-3">
+          {TIPE_TABS.map((t) => (
+            <TabsTrigger key={t.value} value={t.value} className="text-xs sm:text-sm">
+              {t.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+
       {/* Search and Filter */}
       <div className="mb-8 space-y-4">
         <div className="relative">
@@ -146,7 +173,7 @@ export default function ArtikelMasyarakatPage() {
           <p className="text-center text-gray-500">
             {searchQuery || selectedCategory !== "semua"
               ? "Tidak ada artikel yang ditemukan"
-              : "Belum ada artikel yang dipublikasi"}
+              : `Belum ada artikel pada kelompok "${TIPE_TABS.find((t) => t.value === selectedTipe)?.label}"`}
           </p>
         </Card>
       ) : (

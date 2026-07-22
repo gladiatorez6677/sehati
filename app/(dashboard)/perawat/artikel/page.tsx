@@ -39,9 +39,16 @@ interface Artikel {
   id: string
   judul: string
   kategori: string
+  tipeArtikel: "UTAMA" | "PENDUKUNG" | "LOKAL"
   status: string
   viewCount: number
   createdAt: string
+}
+
+const TIPE_LABEL: Record<string, string> = {
+  UTAMA: "Utama",
+  PENDUKUNG: "Pendukung",
+  LOKAL: "Lokal Berbahasa Daerah",
 }
 
 export default function ArtikelPerawatPage() {
@@ -213,6 +220,7 @@ export default function ArtikelPerawatPage() {
                         </DropdownMenu>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
+                        <Badge variant="secondary">{TIPE_LABEL[article.tipeArtikel]}</Badge>
                         <Badge variant="outline">{article.kategori}</Badge>
                         <Badge variant={getStatusColor(article.status) as "default" | "secondary" | "destructive" | "outline"}>
                           {getStatusText(article.status)}
@@ -234,6 +242,7 @@ export default function ArtikelPerawatPage() {
                 <TableRow>
                   <TableHead>Judul</TableHead>
                   <TableHead>Kategori</TableHead>
+                  <TableHead>Jenis</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Views</TableHead>
                   <TableHead>Tanggal</TableHead>
@@ -247,6 +256,9 @@ export default function ArtikelPerawatPage() {
                       {article.judul}
                     </TableCell>
                     <TableCell>{article.kategori}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{TIPE_LABEL[article.tipeArtikel]}</Badge>
+                    </TableCell>
                     <TableCell>
                       <Badge variant={getStatusColor(article.status) as "default" | "secondary" | "destructive" | "outline"}>
                         {getStatusText(article.status)}
