@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth/auth-options"
 import { redirect } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, FileText, BarChart, Activity, Bot, Home, FileBarChart, ChevronRight, MapPin, Video, ClipboardList } from "lucide-react"
+import { Users, FileText, BarChart, Activity, Bot, Home, FileBarChart, ChevronRight, MapPin, Video, ClipboardList, Gamepad2 } from "lucide-react"
 import Link from "next/link"
 import { prisma } from "@/lib/db"
 
@@ -60,6 +60,14 @@ export default async function PerawatDashboard() {
       href: "/perawat/kuisioner",
       color: "text-rose-500",
       bgColor: "bg-rose-50 dark:bg-rose-900/20",
+    },
+    {
+      title: "Games",
+      description: "Kuis + artikel",
+      icon: Gamepad2,
+      href: "/perawat/games",
+      color: "text-fuchsia-500",
+      bgColor: "bg-fuchsia-50 dark:bg-fuchsia-900/20",
     },
     {
       title: "Pengguna",

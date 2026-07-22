@@ -96,6 +96,8 @@ model ArtikelKesehatan {
   viewCount   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  games       GameEdukasi[]
 }
 
 enum ArticleStatus {
@@ -196,8 +198,10 @@ model GameEdukasi {
   kategori    String   // Nutrisi, Olahraga, Penyakit, etc
   difficulty  GameDifficulty
   pertanyaan  Json     // Array of questions
+  artikelId   String?  // artikel yang wajib dibaca sebelum main
+  artikel     ArtikelKesehatan? @relation(fields: [artikelId], references: [id], onDelete: SetNull)
   createdAt   DateTime @default(now())
-  
+
   gameScores  GameScore[]
 }
 

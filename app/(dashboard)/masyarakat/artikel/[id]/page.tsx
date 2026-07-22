@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, Eye, User, Clock, BookOpen } from "lucide-react"
+import { ArrowLeft, Calendar, Eye, User, Clock, BookOpen, Gamepad2, ChevronRight } from "lucide-react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 
@@ -41,9 +42,17 @@ export default function ArtikelDetailPage() {
   const router = useRouter()
   const [article, setArticle] = useState<Artikel | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [gameId, setGameId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchArticle()
+    // Cek apakah ada game yang terhubung ke artikel ini
+    fetch(`/api/games?artikelId=${params.id}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((games: { id: string }[]) => {
+        if (Array.isArray(games) && games.length > 0) setGameId(games[0].id)
+      })
+      .catch(() => {})
   }, [params.id])
 
   const fetchArticle = async () => {
@@ -180,6 +189,25 @@ export default function ArtikelDetailPage() {
             </CardHeader>
             <CardContent>
               <EbookReader url={article.ebook} title={article.judul} />
+            </CardContent>
+          </Card>
+        )}
+
+        {gameId && (
+          <Card className="mt-8 border-pink-200 bg-gradient-to-br from-pink-50 to-white dark:from-pink-950/20 dark:to-gray-900">
+            <CardContent className="flex flex-col items-start gap-3 py-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-pink-600">
+                  <Gamepad2 className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">Sudah selesai membaca?</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Uji pemahaman Anda lewat kuis singkat dan lihat skornya.</p>
+                </div>
+              </div>
+              <Link href={`/masyarakat/games/${gameId}?fromArtikel=1`} className="shrink-0">
+                <Button>Lanjut ke Kuis <ChevronRight className="h-4 w-4 ml-1" /></Button>
+              </Link>
             </CardContent>
           </Card>
         )}

@@ -1,13 +1,28 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth/auth-options"
 import { prisma } from "@/lib/db"
 
-// GET - Ambil semua games edukasi
+const gameInclude = { artikel: { select: { id: true, judul: true } } }
+
+// GET - Ambil semua games edukasi (opsional ?artikelId= untuk game milik satu artikel)
 export async function GET(req: NextRequest) {
   try {
+    const artikelId = new URL(req.url).searchParams.get("artikelId")
+    if (artikelId) {
+      const filtered = await prisma.gameEdukasi.findMany({
+        where: { artikelId },
+        orderBy: { nama: "asc" },
+        include: gameInclude,
+      })
+      return NextResponse.json(filtered)
+    }
+
     let games = await prisma.gameEdukasi.findMany({
       orderBy: {
         nama: 'asc'
-      }
+      },
+      include: gameInclude,
     })
 
     // If no games exist, create sample games
@@ -225,7 +240,8 @@ export async function GET(req: NextRequest) {
       games = await prisma.gameEdukasi.findMany({
         orderBy: {
           nama: 'asc'
-        }
+        },
+        include: gameInclude,
       })
     }
 
@@ -236,5 +252,65 @@ export async function GET(req: NextRequest) {
       { error: "Failed to fetch games" },
       { status: 500 }
     )
+  }
+}
+
+interface QInput {
+  question: string
+  options: string[]
+  correctAnswer: number
+  explanation?: string
+}
+
+function cleanQuestions(raw: unknown): QInput[] | null {
+  if (!Array.isArray(raw)) return null
+  const out: QInput[] = []
+  raw.forEach((q, idx) => {
+    const question = String(q?.question || "").trim()
+    const options = Array.isArray(q?.options) ? q.options.map((o: unknown) => String(o).trim()).filter(Boolean) : []
+    const correctAnswer = Number(q?.correctAnswer)
+    if (!question || options.length < 2) return
+    out.push({
+      question,
+      options,
+      correctAnswer: correctAnswer >= 0 && correctAnswer < options.length ? correctAnswer : 0,
+      explanation: q?.explanation ? String(q.explanation).trim() : "",
+    })
+    void idx
+  })
+  return out
+}
+
+// POST - Perawat membuat game baru
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session || session.user.role !== "PERAWAT") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    const body = await req.json()
+    const nama = String(body.nama || "").trim()
+    const difficulty = ["MUDAH", "SEDANG", "SULIT"].includes(body.difficulty) ? body.difficulty : "MUDAH"
+    const questions = cleanQuestions(body.pertanyaan)
+
+    if (!nama) return NextResponse.json({ error: "Nama game wajib diisi" }, { status: 400 })
+    if (!questions || questions.length === 0) {
+      return NextResponse.json({ error: "Minimal satu pertanyaan dengan 2 opsi" }, { status: 400 })
+    }
+
+    const game = await prisma.gameEdukasi.create({
+      data: {
+        nama,
+        deskripsi: body.deskripsi ? String(body.deskripsi).trim() : "",
+        kategori: body.kategori ? String(body.kategori).trim() : "Umum",
+        difficulty,
+        pertanyaan: questions.map((q, i) => ({ id: i + 1, ...q })),
+        artikelId: body.artikelId ? String(body.artikelId) : null,
+      },
+    })
+    return NextResponse.json(game, { status: 201 })
+  } catch (error) {
+    console.error("Error creating game:", error)
+    return NextResponse.json({ error: "Failed to create game" }, { status: 500 })
   }
 }
