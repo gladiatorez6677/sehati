@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Heart, Shield, Activity, Brain, Stethoscope } from "lucide-react"
+import { InstallPWAButton } from "@/components/pwa/install-button"
 
 export default function Home() {
   return (
@@ -23,7 +24,7 @@ export default function Home() {
             <p className="mt-2 text-base leading-8 text-gray-600 dark:text-gray-300">
               Pantau kesehatan Anda dengan mudah dan dapatkan konsultasi AI kapan saja
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
               <Link href="/register">
                 <Button size="lg" className="px-8">
                   Daftar Sekarang
@@ -34,6 +35,7 @@ export default function Home() {
                   Masuk
                 </Button>
               </Link>
+              <InstallPWAButton />
             </div>
           </div>
         </div>
