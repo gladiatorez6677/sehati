@@ -40,16 +40,15 @@ export function InstallPWAButton() {
     }
   }, [])
 
+  // Sembunyikan hanya jika aplikasi sudah ter-install; selain itu tombol selalu tampil.
   if (installed) return null
-  // Tampilkan hanya bila bisa di-install (Android/desktop) atau iOS (butuh cara manual)
-  if (!deferred && !isIOS) return null
 
   const handleClick = async () => {
     if (deferred) {
       await deferred.prompt()
       await deferred.userChoice
       setDeferred(null)
-    } else if (isIOS) {
+    } else {
       setShowHelp(true)
     }
   }
@@ -81,22 +80,39 @@ export function InstallPWAButton() {
               </button>
             </div>
             <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
-              Di Safari (iPhone/iPad), tambahkan aplikasi ini ke layar utama agar bisa dibuka seperti app dan menerima notifikasi:
+              Tambahkan aplikasi ini ke layar utama agar bisa dibuka seperti app dan menerima notifikasi pengingat:
             </p>
-            <ol className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
-              <li className="flex items-center gap-2">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">1</span>
-                Tekan tombol <Share className="mx-1 inline h-4 w-4" /> <b>Bagikan</b> di bilah bawah Safari
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">2</span>
-                Pilih <Plus className="mx-1 inline h-4 w-4" /> <b>Tambahkan ke Layar Utama</b>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">3</span>
-                Tekan <b>Tambah</b> di pojok kanan atas
-              </li>
-            </ol>
+            {isIOS ? (
+              <ol className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
+                <li className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">1</span>
+                  Buka di <b>Safari</b>, lalu tekan tombol <Share className="mx-1 inline h-4 w-4" /> <b>Bagikan</b>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">2</span>
+                  Pilih <Plus className="mx-1 inline h-4 w-4" /> <b>Tambahkan ke Layar Utama</b>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">3</span>
+                  Tekan <b>Tambah</b> di pojok kanan atas
+                </li>
+              </ol>
+            ) : (
+              <ol className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
+                <li className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">1</span>
+                  Gunakan <b>Google Chrome</b> (Android/desktop)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">2</span>
+                  Buka menu <b>⋮</b> di kanan atas
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-600">3</span>
+                  Pilih <b>Instal aplikasi</b> / <b>Tambahkan ke Layar Utama</b>
+                </li>
+              </ol>
+            )}
           </div>
         </div>
       )}
