@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/contexts/language-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Shield, Brain, MessageCircle, Map, Music, Gamepad, FileText, ChevronRight, Video, PlayCircle, Pill } from "lucide-react"
+import { Heart, Shield, Brain, MessageCircle, Map, Music, Gamepad, FileText, ChevronRight, Video, PlayCircle, Pill, ClipboardList } from "lucide-react"
 import Link from "next/link"
 import { ArtikelCard } from "@/components/artikel-card"
 
@@ -61,6 +61,14 @@ export function MasyarakatDashboardContent({ userName, recentArticles }: Masyara
       href: "/masyarakat/artikel",
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-900/20",
+    },
+    {
+      titleKey: "Kuisioner",
+      descriptionKey: "Isi kuisioner kesehatan",
+      icon: ClipboardList,
+      href: "/masyarakat/kuisioner",
+      color: "text-rose-500",
+      bgColor: "bg-rose-50 dark:bg-rose-900/20",
     },
     {
       titleKey: "nav.stress",

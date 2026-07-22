@@ -33,6 +33,7 @@ import {
   Settings,
   Video,
   Pill,
+  ClipboardList,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { AppLogo } from "@/components/layout/app-logo"
@@ -43,6 +44,7 @@ const masyarakatMenuItems = [
   { href: "/masyarakat/tekanan-darah", label: "Tekanan Darah", icon: Heart },
   { href: "/masyarakat/pengingat-obat", label: "Pengingat Obat", icon: Pill },
   { href: "/masyarakat/artikel", label: "Artikel Kesehatan", icon: FileText },
+  { href: "/masyarakat/kuisioner", label: "Kuisioner", icon: ClipboardList },
   { href: "/masyarakat/manajemen-stress", label: "Manajemen Stress", icon: Brain },
   { href: "/masyarakat/kolesterol", label: "Kontrol Kolesterol", icon: Shield },
   { href: "/masyarakat/peta-fasilitas", label: "Peta Fasilitas", icon: Map },
@@ -56,6 +58,7 @@ const perawatMenuItems = [
   { href: "/perawat/pengguna", label: "Manajemen Pengguna", icon: Users },
   { href: "/perawat/artikel", label: "Manajemen Artikel", icon: FileText },
   { href: "/perawat/video-kesehatan", label: "Manajemen Video", icon: Video },
+  { href: "/perawat/kuisioner", label: "Manajemen Kuisioner", icon: ClipboardList },
   { href: "/perawat/laporan", label: "Laporan Kesehatan", icon: BarChart },
   { href: "/perawat/pengaturan", label: "Pengaturan", icon: Settings },
 ]

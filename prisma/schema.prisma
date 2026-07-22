@@ -50,6 +50,7 @@ model Masyarakat {
   konsultasiAI      KonsultasiAI[]
   notification      Notification[]
   pengingatObat     PengingatObat[]
+  responKuisioner   ResponKuisioner[]
 }
 
 // Perawat specific data
@@ -59,9 +60,10 @@ model Perawat {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   nomorSTR       String    @unique
   spesialisasi   String
-  
+
   // Relations
   artikelKesehatan ArtikelKesehatan[]
+  kuisioner        Kuisioner[]
 }
 
 // Tekanan Darah
@@ -280,6 +282,55 @@ model PushSubscription {
   p256dh    String   @db.VarChar(255)
   auth      String   @db.VarChar(255)
   createdAt DateTime @default(now())
+}
+
+// ===== Kuisioner (dikelola Perawat, diisi Masyarakat) =====
+model Kuisioner {
+  id         String                @id @default(cuid())
+  perawatId  String
+  perawat    Perawat               @relation(fields: [perawatId], references: [id], onDelete: Cascade)
+  judul      String
+  deskripsi  String?               @db.Text
+  aktif      Boolean               @default(true)
+  pertanyaan PertanyaanKuisioner[]
+  respon     ResponKuisioner[]
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+}
+
+model PertanyaanKuisioner {
+  id          String             @id @default(cuid())
+  kuisionerId String
+  kuisioner   Kuisioner          @relation(fields: [kuisionerId], references: [id], onDelete: Cascade)
+  teks        String             @db.Text
+  tipe        TipePertanyaan     @default(PILIHAN)
+  opsi        String?            @db.Text // JSON array opsi untuk tipe PILIHAN
+  urutan      Int                @default(0)
+  jawaban     JawabanKuisioner[]
+}
+
+enum TipePertanyaan {
+  PILIHAN
+  TEKS
+}
+
+model ResponKuisioner {
+  id           String             @id @default(cuid())
+  kuisionerId  String
+  kuisioner    Kuisioner          @relation(fields: [kuisionerId], references: [id], onDelete: Cascade)
+  masyarakatId String
+  masyarakat   Masyarakat         @relation(fields: [masyarakatId], references: [id], onDelete: Cascade)
+  jawaban      JawabanKuisioner[]
+  createdAt    DateTime           @default(now())
+}
+
+model JawabanKuisioner {
+  id           String              @id @default(cuid())
+  responId     String
+  respon       ResponKuisioner     @relation(fields: [responId], references: [id], onDelete: Cascade)
+  pertanyaanId String
+  pertanyaan   PertanyaanKuisioner @relation(fields: [pertanyaanId], references: [id], onDelete: Cascade)
+  nilai        String              @db.Text
 }
 
 // Video Kesehatan (dikelola oleh Perawat, ditonton oleh Masyarakat)
