@@ -30,7 +30,11 @@ interface Pengingat {
   aktif: boolean
 }
 
-const HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]
+// Label per nomor hari JS (0=Minggu .. 6=Sabtu)
+const HARI_LABEL = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]
+// Urutan tampil: Senin dulu s/d Minggu
+const HARI_ORDER = [1, 2, 3, 4, 5, 6, 0]
+const SEMUA_HARI = [0, 1, 2, 3, 4, 5, 6]
 
 export default function PengingatObatPage() {
   const [items, setItems] = useState<Pengingat[]>([])
@@ -154,9 +158,9 @@ export default function PengingatObatPage() {
   }
 
   const hariLabel = (hari: string) => {
-    const days = hari.split(",").map((d) => parseInt(d.trim(), 10)).filter((n) => !isNaN(n))
-    if (days.length === 7) return "Setiap hari"
-    return days.sort().map((d) => HARI[d]).join(", ")
+    const set = new Set(hari.split(",").map((d) => parseInt(d.trim(), 10)).filter((n) => !isNaN(n)))
+    if (set.size === 7) return "Senin–Minggu (setiap hari)"
+    return HARI_ORDER.filter((d) => set.has(d)).map((d) => HARI_LABEL[d]).join(", ")
   }
 
   return (
@@ -226,7 +230,7 @@ export default function PengingatObatPage() {
             <div>
               <label className="mb-1.5 block text-sm font-medium">Hari</label>
               <div className="flex flex-wrap gap-2">
-                {HARI.map((h, d) => (
+                {HARI_ORDER.map((d) => (
                   <button
                     key={d}
                     type="button"
@@ -237,13 +241,13 @@ export default function PengingatObatPage() {
                         : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
                     }`}
                   >
-                    {h}
+                    {HARI_LABEL[d]}
                   </button>
                 ))}
               </div>
-              <div className="mt-2 flex gap-2">
-                <button type="button" className="text-xs text-pink-600 hover:underline" onClick={() => setHariSet(new Set([0, 1, 2, 3, 4, 5, 6]))}>
-                  Setiap hari
+              <div className="mt-2 flex gap-3">
+                <button type="button" className="text-xs text-pink-600 hover:underline" onClick={() => setHariSet(new Set(SEMUA_HARI))}>
+                  Senin–Minggu (setiap hari)
                 </button>
                 <button type="button" className="text-xs text-gray-500 hover:underline" onClick={() => setHariSet(new Set([1, 2, 3, 4, 5]))}>
                   Senin–Jumat

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { RegisterSW } from "@/components/pwa/register-sw";
+import { AlarmListener } from "@/components/pwa/alarm-listener";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <RegisterSW />
+          <AlarmListener />
         </AuthProvider>
       </body>
     </html>

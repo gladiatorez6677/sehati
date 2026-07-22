@@ -21,14 +21,25 @@ self.addEventListener("push", (event) => {
     body: data.body || "Saatnya minum obat Anda.",
     icon: data.icon || "/icon-192.png",
     badge: "/icon-192.png",
-    vibrate: [300, 150, 300, 150, 300],
+    // Getaran panjang & berulang agar lebih terasa seperti alarm
+    vibrate: [600, 200, 600, 200, 600, 200, 600, 200, 800],
+    silent: false,
     tag: data.tag || "pengingat-obat",
     renotify: true,
     requireInteraction: true,
     data: { url: data.url || "/masyarakat/pengingat-obat" },
   }
 
-  event.waitUntil(self.registration.showNotification(title, options))
+  event.waitUntil(
+    (async () => {
+      await self.registration.showNotification(title, options)
+      // Bila ada halaman app yang terbuka, minta mainkan alarm suara di dalam app
+      const wins = await self.clients.matchAll({ type: "window", includeUncontrolled: true })
+      for (const c of wins) {
+        c.postMessage({ type: "reminder-alarm", title, body: options.body })
+      }
+    })()
+  )
 })
 
 self.addEventListener("notificationclick", (event) => {
