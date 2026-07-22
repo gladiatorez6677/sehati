@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Pill, Plus, Trash, Clock, X, Loader2 } from "lucide-react"
+import { Pill, Plus, Trash, Clock, X, Loader2, Pencil } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { PushEnable } from "@/components/masyarakat/push-enable"
 import {
@@ -42,6 +42,7 @@ export default function PengingatObatPage() {
   const [showForm, setShowForm] = useState(false)
   const [saving, setSaving] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [editId, setEditId] = useState<string | null>(null)
 
   // Form state
   const [namaObat, setNamaObat] = useState("")
@@ -71,6 +72,23 @@ export default function PengingatObatPage() {
     setCatatan("")
     setJamList(["08:00"])
     setHariSet(new Set([0, 1, 2, 3, 4, 5, 6]))
+    setEditId(null)
+  }
+
+  const startEdit = (item: Pengingat) => {
+    setEditId(item.id)
+    setNamaObat(item.namaObat)
+    setDosis(item.dosis || "")
+    setCatatan(item.catatan || "")
+    setJamList(item.jam.split(",").map((j) => j.trim()).filter(Boolean))
+    setHariSet(new Set(item.hari.split(",").map((d) => parseInt(d.trim(), 10)).filter((n) => !isNaN(n))))
+    setShowForm(true)
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const openNew = () => {
+    resetForm()
+    setShowForm(true)
   }
 
   const toggleHari = (d: number) => {
@@ -103,19 +121,25 @@ export default function PengingatObatPage() {
 
     setSaving(true)
     try {
-      const res = await fetch("/api/pengingat-obat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          namaObat,
-          dosis,
-          catatan,
-          jam,
-          hari: Array.from(hariSet).map(String),
-        }),
-      })
+      const res = await fetch(
+        editId ? `/api/pengingat-obat/${editId}` : "/api/pengingat-obat",
+        {
+          method: editId ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            namaObat,
+            dosis,
+            catatan,
+            jam,
+            hari: Array.from(hariSet).map(String),
+          }),
+        },
+      )
       if (res.ok) {
-        toast({ title: "Tersimpan", description: "Pengingat obat berhasil dibuat" })
+        toast({
+          title: "Tersimpan",
+          description: editId ? "Pengingat berhasil diperbarui" : "Pengingat obat berhasil dibuat",
+        })
         resetForm()
         setShowForm(false)
         fetchItems()
@@ -180,7 +204,7 @@ export default function PengingatObatPage() {
       </div>
 
       {!showForm && (
-        <Button onClick={() => setShowForm(true)} className="mb-6">
+        <Button onClick={openNew} className="mb-6">
           <Plus className="h-4 w-4 mr-2" />
           Tambah Pengingat
         </Button>
@@ -189,7 +213,7 @@ export default function PengingatObatPage() {
       {showForm && (
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Pengingat Baru</CardTitle>
+            <CardTitle className="text-lg">{editId ? "Edit Pengingat" : "Pengingat Baru"}</CardTitle>
             <CardDescription>Isi detail obat dan waktu pengingat</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -247,10 +271,7 @@ export default function PengingatObatPage() {
               </div>
               <div className="mt-2 flex gap-3">
                 <button type="button" className="text-xs text-pink-600 hover:underline" onClick={() => setHariSet(new Set(SEMUA_HARI))}>
-                  Senin–Minggu (setiap hari)
-                </button>
-                <button type="button" className="text-xs text-gray-500 hover:underline" onClick={() => setHariSet(new Set([1, 2, 3, 4, 5]))}>
-                  Senin–Jumat
+                  Pilih semua (Senin–Minggu)
                 </button>
               </div>
             </div>
@@ -307,9 +328,14 @@ export default function PengingatObatPage() {
                   >
                     <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${item.aktif ? "translate-x-5" : "translate-x-0.5"}`} />
                   </button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setDeleteId(item.id)}>
-                    <Trash className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-600 dark:text-gray-300" onClick={() => startEdit(item)} aria-label="Edit">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setDeleteId(item.id)} aria-label="Hapus">
+                      <Trash className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
