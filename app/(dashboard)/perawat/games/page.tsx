@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Gamepad2, Pencil, Trash, HelpCircle, FileText } from "lucide-react"
+import { Plus, Gamepad2, Pencil, Trash, HelpCircle, FileText, BarChart3 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -80,10 +80,13 @@ export default function GamesPerawatPage() {
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-semibold text-gray-900 dark:text-white">{g.nama}</h3>
                   <div className="flex shrink-0 gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push(`/perawat/games/${g.id}/edit`)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600" title="Hasil" onClick={() => router.push(`/perawat/games/${g.id}/hasil`)}>
+                      <BarChart3 className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" title="Edit" onClick={() => router.push(`/perawat/games/${g.id}/edit`)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" onClick={() => setDeleteId(g.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600" title="Hapus" onClick={() => setDeleteId(g.id)}>
                       <Trash className="h-4 w-4" />
                     </Button>
                   </div>
