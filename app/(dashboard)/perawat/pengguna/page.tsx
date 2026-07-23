@@ -23,6 +23,7 @@ import { Search, Users, UserCheck, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import { id } from "date-fns/locale"
 import { toast } from "@/hooks/use-toast"
+import { TambahPenggunaDialog } from "@/components/perawat/tambah-pengguna-dialog"
 
 interface User {
   id: string
@@ -126,13 +127,16 @@ export default function PenggunaPage() {
 
   return (
     <div className="p-4 lg:p-8">
-      <div className="mb-8">
-        <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
-          Data Pengguna
-        </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Kelola dan lihat informasi semua pengguna aplikasi
-        </p>
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
+            Data Pengguna
+          </h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            Kelola dan lihat informasi semua pengguna aplikasi
+          </p>
+        </div>
+        <TambahPenggunaDialog onCreated={fetchUsers} />
       </div>
 
       {/* Stats */}
