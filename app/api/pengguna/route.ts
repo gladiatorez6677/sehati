@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     if (String(password).length < 6) {
       return NextResponse.json({ error: "Password minimal 6 karakter" }, { status: 400 })
     }
-    if (role !== UserRole.MASYARAKAT && role !== UserRole.PERAWAT) {
+    if (![UserRole.MASYARAKAT, UserRole.PERAWAT, UserRole.SURVEILLANCE].includes(role)) {
       return NextResponse.json({ error: "Role tidak valid" }, { status: 400 })
     }
     if (role === UserRole.PERAWAT && (!nomorSTR || !spesialisasi)) {
@@ -56,10 +56,15 @@ export async function POST(req: NextRequest) {
       })
       if (role === UserRole.MASYARAKAT) {
         await tx.masyarakat.create({ data: { userId: newUser.id } })
-      } else {
+      } else if (role === UserRole.PERAWAT) {
         const existingPerawat = await tx.perawat.findUnique({ where: { nomorSTR } })
         if (existingPerawat) throw new Error("Nomor STR sudah terdaftar")
         await tx.perawat.create({ data: { userId: newUser.id, nomorSTR, spesialisasi } })
+      } else {
+        // SURVEILLANCE: seperti perawat tetapi tanpa STR
+        await tx.perawat.create({
+          data: { userId: newUser.id, nomorSTR: null, spesialisasi: spesialisasi || "Surveillance" },
+        })
       }
       return newUser
     })

@@ -105,6 +105,8 @@ export default function PenggunaPage() {
         return <Badge variant="secondary">Masyarakat</Badge>
       case "PERAWAT":
         return <Badge variant="default">Perawat</Badge>
+      case "SURVEILLANCE":
+        return <Badge className="bg-teal-100 text-teal-700 hover:bg-teal-100">Surveillance</Badge>
       default:
         return <Badge variant="outline">{role}</Badge>
     }
@@ -207,6 +209,7 @@ export default function PenggunaPage() {
                 <SelectItem value="all">Semua Role</SelectItem>
                 <SelectItem value="MASYARAKAT">Masyarakat</SelectItem>
                 <SelectItem value="PERAWAT">Perawat</SelectItem>
+                <SelectItem value="SURVEILLANCE">Surveillance</SelectItem>
               </SelectContent>
             </Select>
           </div>

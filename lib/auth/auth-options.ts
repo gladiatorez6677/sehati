@@ -61,6 +61,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email
         session.user.name = token.name
         session.user.role = token.role
+        ;(session.user as { roleAsli?: string }).roleAsli = (token as { roleAsli?: string }).roleAsli
       }
       return session
     },
@@ -69,7 +70,10 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         token.email = user.email
         token.name = user.name
-        token.role = user.role
+        // SURVEILLANCE bertindak seperti PERAWAT untuk otorisasi (akses admin sama);
+        // role asli disimpan di roleAsli.
+        ;(token as { roleAsli?: string }).roleAsli = user.role
+        token.role = (user.role === "SURVEILLANCE" ? "PERAWAT" : user.role) as typeof token.role
       }
       return token
     },

@@ -105,7 +105,11 @@ export function TambahPenggunaDialog({ onCreated }: { onCreated: () => void }) {
                 <div>
                   <label className="mb-1 block text-sm font-medium">Role *</label>
                   <ClientSelect value={form.role} onValueChange={(v) => set("role", v)} placeholder="Pilih"
-                    items={[{ value: "MASYARAKAT", label: "Masyarakat" }, { value: "PERAWAT", label: "Perawat" }]} />
+                    items={[
+                      { value: "MASYARAKAT", label: "Masyarakat" },
+                      { value: "PERAWAT", label: "Perawat" },
+                      { value: "SURVEILLANCE", label: "Surveillance" },
+                    ]} />
                 </div>
               </div>
               <div>
@@ -123,6 +127,14 @@ export function TambahPenggunaDialog({ onCreated }: { onCreated: () => void }) {
                     <label className="mb-1 block text-sm font-medium">Spesialisasi *</label>
                     <Input value={form.spesialisasi} onChange={(e) => set("spesialisasi", e.target.value)} placeholder="mis. Perawat Umum" />
                   </div>
+                </div>
+              )}
+
+              {form.role === "SURVEILLANCE" && (
+                <div className="rounded-lg bg-pink-50 p-3 dark:bg-pink-950/20">
+                  <label className="mb-1 block text-sm font-medium">Bagian / Unit (opsional)</label>
+                  <Input value={form.spesialisasi} onChange={(e) => set("spesialisasi", e.target.value)} placeholder="mis. Surveilans Hipertensi" />
+                  <p className="mt-1.5 text-xs text-gray-500">Role Surveillance punya akses seperti perawat, tetapi tanpa Nomor STR.</p>
                 </div>
               )}
             </div>

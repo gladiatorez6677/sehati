@@ -33,6 +33,7 @@ model User {
 enum UserRole {
   MASYARAKAT
   PERAWAT
+  SURVEILLANCE
 }
 
 // Masyarakat specific data
@@ -58,7 +59,7 @@ model Perawat {
   id             String    @id @default(cuid())
   userId         String    @unique
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  nomorSTR       String    @unique
+  nomorSTR       String?   @unique   // opsional: role SURVEILLANCE tanpa STR
   spesialisasi   String
 
   // Relations
