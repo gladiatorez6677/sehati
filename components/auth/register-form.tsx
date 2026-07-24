@@ -42,6 +42,8 @@ const baseSchema = z.object({
 
 const masyarakatSchema = baseSchema.extend({
   role: z.literal("MASYARAKAT"),
+  pendidikanTerakhir: z.string().min(1, "Pilih pendidikan terakhir"),
+  pekerjaan: z.string().min(1, "Isi pekerjaan"),
 })
 
 const perawatSchema = baseSchema.extend({
@@ -69,6 +71,8 @@ export function RegisterForm() {
       jenisKelamin: undefined,
       nomorTelepon: "",
       alamat: "",
+      pendidikanTerakhir: "",
+      pekerjaan: "",
     },
   })
 
@@ -237,6 +241,46 @@ export function RegisterForm() {
                       <FormLabel>Alamat (Opsional)</FormLabel>
                       <FormControl>
                         <Textarea placeholder="Jl. Contoh No. 123" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={masyarakatForm.control}
+                  name="pendidikanTerakhir"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pendidikan Terakhir</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih pendidikan terakhir" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Tidak Sekolah">Tidak Sekolah</SelectItem>
+                          <SelectItem value="SD">SD</SelectItem>
+                          <SelectItem value="SMP">SMP</SelectItem>
+                          <SelectItem value="SMA/SMK">SMA/SMK</SelectItem>
+                          <SelectItem value="Diploma">Diploma (D1-D4)</SelectItem>
+                          <SelectItem value="Sarjana (S1)">Sarjana (S1)</SelectItem>
+                          <SelectItem value="Magister (S2)">Magister (S2)</SelectItem>
+                          <SelectItem value="Doktor (S3)">Doktor (S3)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={masyarakatForm.control}
+                  name="pekerjaan"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pekerjaan</FormLabel>
+                      <FormControl>
+                        <Input placeholder="mis. Petani, Wiraswasta, PNS" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

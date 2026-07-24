@@ -15,6 +15,8 @@ export async function POST(req: Request) {
       jenisKelamin,
       nomorTelepon,
       alamat,
+      pendidikanTerakhir,
+      pekerjaan,
       role,
       nomorSTR,
       spesialisasi,
@@ -84,6 +86,8 @@ export async function POST(req: Request) {
           jenisKelamin,
           nomorTelepon,
           alamat: alamat || null,
+          pendidikanTerakhir: pendidikanTerakhir || null,
+          pekerjaan: pekerjaan || null,
           role,
         },
       })

@@ -18,7 +18,7 @@ export async function GET() {
     const [user, tekananDarah, kolesterol, stress] = await Promise.all([
       prisma.user.findUnique({
         where: { id: session.user.id },
-        select: { nama: true, email: true, tanggalLahir: true, jenisKelamin: true, nomorTelepon: true, alamat: true },
+        select: { nama: true, email: true, tanggalLahir: true, jenisKelamin: true, nomorTelepon: true, alamat: true, pendidikanTerakhir: true, pekerjaan: true },
       }),
       prisma.tekananDarah.findFirst({ where: { masyarakatId: masyarakat.id }, orderBy: { tanggalPengukuran: "desc" } }),
       prisma.controlKolesterol.findFirst({ where: { masyarakatId: masyarakat.id }, orderBy: { tanggalPemeriksaan: "desc" } }),

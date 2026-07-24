@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { X, User, Mail, Phone, MapPin, Calendar, Heart, Shield, Brain, Activity } from "lucide-react"
+import { X, User, Mail, Phone, MapPin, Calendar, Heart, Shield, Brain, Activity, GraduationCap, Briefcase } from "lucide-react"
 import { format } from "date-fns"
 import { id as localeId } from "date-fns/locale"
 
@@ -16,6 +16,8 @@ interface Ringkasan {
     jenisKelamin: string
     nomorTelepon: string
     alamat: string | null
+    pendidikanTerakhir: string | null
+    pekerjaan: string | null
   } | null
   tekananDarah: { sistolik: number; diastolik: number; kategori: string; tanggalPengukuran: string } | null
   kolesterol: { totalKolesterol: number; tanggalPemeriksaan: string } | null
@@ -102,6 +104,8 @@ export function WelcomeProfileModal() {
                 <Info icon={Calendar} label="Tanggal Lahir" value={`${format(new Date(d.tanggalLahir), "d MMM yyyy", { locale: localeId })} (${hitungUmur(d.tanggalLahir)} th)`} />
               )}
               {d?.jenisKelamin && <Info icon={User} label="Jenis Kelamin" value={d.jenisKelamin === "L" ? "Laki-laki" : "Perempuan"} />}
+              {d?.pendidikanTerakhir && <Info icon={GraduationCap} label="Pendidikan Terakhir" value={d.pendidikanTerakhir} />}
+              {d?.pekerjaan && <Info icon={Briefcase} label="Pekerjaan" value={d.pekerjaan} />}
               {d?.alamat && <Info icon={MapPin} label="Alamat" value={d.alamat} full />}
             </div>
           </section>

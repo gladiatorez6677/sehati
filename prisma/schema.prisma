@@ -20,6 +20,8 @@ model User {
   jenisKelamin  String
   nomorTelepon  String
   alamat        String?
+  pendidikanTerakhir String?
+  pekerjaan     String?
   role          UserRole
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
