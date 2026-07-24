@@ -183,6 +183,25 @@ export default function LaporanPage() {
     }
   }
 
+  const downloadExcel = async () => {
+    try {
+      const response = await fetch(`/api/laporan/export-excel`)
+      if (!response.ok) throw new Error("Failed")
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `laporan-masyarakat-${format(new Date(), "yyyy-MM-dd")}.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
+      toast({ title: "Berhasil", description: "Data Excel semua masyarakat berhasil diunduh" })
+    } catch {
+      toast({ title: "Error", description: "Gagal mengunduh Excel", variant: "destructive" })
+    }
+  }
+
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
   if (isLoading || !stats) {
@@ -208,10 +227,14 @@ export default function LaporanPage() {
               Analisis dan statistik kesehatan pengguna
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button onClick={downloadReport} variant="outline">
               <Download className="mr-2 h-4 w-4" />
               Export Laporan
+            </Button>
+            <Button onClick={downloadExcel} className="bg-green-600 hover:bg-green-700">
+              <Download className="mr-2 h-4 w-4" />
+              Unduh Excel (Semua Masyarakat)
             </Button>
           </div>
         </div>
