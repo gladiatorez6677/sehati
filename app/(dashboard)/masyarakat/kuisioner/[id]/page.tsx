@@ -14,7 +14,7 @@ interface Pertanyaan {
   tipe: "PILIHAN" | "TEKS"
   opsi: string[]
 }
-interface Kuisioner {
+interface Kuesioner {
   id: string
   judul: string
   deskripsi: string | null
@@ -25,7 +25,7 @@ export default function IsiKuisionerPage() {
   const params = useParams()
   const router = useRouter()
   const id = params.id as string
-  const [data, setData] = useState<Kuisioner | null>(null)
+  const [data, setData] = useState<Kuesioner | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)

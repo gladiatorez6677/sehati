@@ -35,15 +35,15 @@ export default function KuisionerMasyarakatPage() {
       <div className="mb-6">
         <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
           <ClipboardList className="h-6 w-6 text-pink-500" />
-          Kuisioner
+          Kuesioner
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">Isi kuisioner kesehatan dari petugas</p>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">Isi kuesioner kesehatan dari petugas</p>
       </div>
 
       {isLoading ? (
         <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>
       ) : items.length === 0 ? (
-        <Card className="p-8"><p className="text-center text-gray-500">Belum ada kuisioner yang tersedia.</p></Card>
+        <Card className="p-8"><p className="text-center text-gray-500">Belum ada kuesioner yang tersedia.</p></Card>
       ) : (
         <div className="space-y-3">
           {items.map((k) => (

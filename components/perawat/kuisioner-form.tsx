@@ -73,7 +73,7 @@ export function KuisionerForm({ kuisionerId }: { kuisionerId?: string }) {
 
   const handleSubmit = async () => {
     if (!judul.trim()) {
-      toast({ title: "Lengkapi data", description: "Judul kuisioner wajib diisi", variant: "destructive" })
+      toast({ title: "Lengkapi data", description: "Judul kuesioner wajib diisi", variant: "destructive" })
       return
     }
     const clean = questions
@@ -98,7 +98,7 @@ export function KuisionerForm({ kuisionerId }: { kuisionerId?: string }) {
         body: JSON.stringify({ judul, deskripsi, aktif, pertanyaan: clean }),
       })
       if (res.ok) {
-        toast({ title: "Tersimpan", description: isEdit ? "Kuisioner diperbarui" : "Kuisioner dibuat" })
+        toast({ title: "Tersimpan", description: isEdit ? "Kuesioner diperbarui" : "Kuesioner dibuat" })
         router.push("/perawat/kuisioner")
       } else {
         const j = await res.json().catch(() => ({}))
@@ -123,7 +123,7 @@ export function KuisionerForm({ kuisionerId }: { kuisionerId?: string }) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Informasi Kuisioner</CardTitle>
+          <CardTitle className="text-lg">Informasi Kuesioner</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -132,7 +132,7 @@ export function KuisionerForm({ kuisionerId }: { kuisionerId?: string }) {
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium">Deskripsi (opsional)</label>
-            <Textarea value={deskripsi} onChange={(e) => setDeskripsi(e.target.value)} placeholder="Penjelasan singkat kuisioner" />
+            <Textarea value={deskripsi} onChange={(e) => setDeskripsi(e.target.value)} placeholder="Penjelasan singkat kuesioner" />
           </div>
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={aktif} onChange={(e) => setAktif(e.target.checked)} className="h-4 w-4" />
@@ -143,7 +143,7 @@ export function KuisionerForm({ kuisionerId }: { kuisionerId?: string }) {
 
       {locked && (
         <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:bg-amber-950/20 dark:text-amber-300">
-          Kuisioner ini sudah memiliki responden, jadi <b>pertanyaan tidak bisa diubah</b> (agar data jawaban tetap konsisten). Anda tetap bisa mengubah judul, deskripsi, dan status aktif.
+          Kuesioner ini sudah memiliki responden, jadi <b>pertanyaan tidak bisa diubah</b> (agar data jawaban tetap konsisten). Anda tetap bisa mengubah judul, deskripsi, dan status aktif.
         </div>
       )}
 

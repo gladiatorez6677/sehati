@@ -82,7 +82,7 @@ export default function HasilKuisionerPage() {
       </div>
 
       {data.totalResponden === 0 ? (
-        <Card className="p-8"><p className="text-center text-gray-500">Belum ada yang mengisi kuisioner ini.</p></Card>
+        <Card className="p-8"><p className="text-center text-gray-500">Belum ada yang mengisi kuesioner ini.</p></Card>
       ) : (
         <Tabs defaultValue="ringkasan">
           <TabsList className="grid w-full grid-cols-2 mb-4">

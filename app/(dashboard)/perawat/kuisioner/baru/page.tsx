@@ -12,7 +12,7 @@ export default function KuisionerBaruPage() {
       <Button variant="ghost" onClick={() => router.push("/perawat/kuisioner")} className="mb-6">
         <ArrowLeft className="h-4 w-4 mr-2" /> Kembali
       </Button>
-      <h1 className="mb-6 text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">Buat Kuisioner</h1>
+      <h1 className="mb-6 text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">Buat Kuesioner</h1>
       <KuisionerForm />
     </div>
   )

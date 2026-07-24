@@ -54,7 +54,7 @@ export default async function PerawatDashboard() {
       bgColor: "bg-pink-50 dark:bg-pink-900/20",
     },
     {
-      title: "Kuisioner",
+      title: "Kuesioner",
       description: "Buat & lihat hasil",
       icon: ClipboardList,
       href: "/perawat/kuisioner",

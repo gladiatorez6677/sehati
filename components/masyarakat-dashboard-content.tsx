@@ -64,8 +64,8 @@ export function MasyarakatDashboardContent({ userName, recentArticles }: Masyara
       bgColor: "bg-blue-50 dark:bg-blue-900/20",
     },
     {
-      titleKey: "Kuisioner",
-      descriptionKey: "Isi kuisioner kesehatan",
+      titleKey: "Kuesioner",
+      descriptionKey: "Isi kuesioner kesehatan",
       icon: ClipboardList,
       href: "/masyarakat/kuisioner",
       color: "text-rose-500",

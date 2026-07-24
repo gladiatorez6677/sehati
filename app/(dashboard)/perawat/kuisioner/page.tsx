@@ -12,7 +12,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-interface Kuisioner {
+interface Kuesioner {
   id: string
   judul: string
   deskripsi: string | null
@@ -22,7 +22,7 @@ interface Kuisioner {
 
 export default function KuisionerPerawatPage() {
   const router = useRouter()
-  const [items, setItems] = useState<Kuisioner[]>([])
+  const [items, setItems] = useState<Kuesioner[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
@@ -37,7 +37,7 @@ export default function KuisionerPerawatPage() {
     }
   }
 
-  const toggleAktif = async (item: Kuisioner) => {
+  const toggleAktif = async (item: Kuesioner) => {
     setItems((prev) => prev.map((k) => (k.id === item.id ? { ...k, aktif: !k.aktif } : k)))
     await fetch(`/api/kuisioner/${item.id}`, {
       method: "PUT",
@@ -51,7 +51,7 @@ export default function KuisionerPerawatPage() {
     try {
       const res = await fetch(`/api/kuisioner/${deleteId}`, { method: "DELETE" })
       if (res.ok) {
-        toast({ title: "Terhapus", description: "Kuisioner dihapus" })
+        toast({ title: "Terhapus", description: "Kuesioner dihapus" })
         setItems((prev) => prev.filter((k) => k.id !== deleteId))
       }
     } finally {
@@ -65,19 +65,19 @@ export default function KuisionerPerawatPage() {
         <div>
           <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
             <ClipboardList className="h-6 w-6 text-pink-500" />
-            Manajemen Kuisioner
+            Manajemen Kuesioner
           </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">Buat kuisioner dan lihat hasilnya</p>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">Buat kuesioner dan lihat hasilnya</p>
         </div>
         <Button onClick={() => router.push("/perawat/kuisioner/baru")}>
-          <Plus className="h-4 w-4 mr-2" /> Buat Kuisioner
+          <Plus className="h-4 w-4 mr-2" /> Buat Kuesioner
         </Button>
       </div>
 
       {isLoading ? (
         <div className="flex justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>
       ) : items.length === 0 ? (
-        <Card className="p-8"><p className="text-center text-gray-500">Belum ada kuisioner. Tekan "Buat Kuisioner".</p></Card>
+        <Card className="p-8"><p className="text-center text-gray-500">Belum ada kuesioner. Tekan "Buat Kuesioner".</p></Card>
       ) : (
         <div className="space-y-3">
           {items.map((k) => (
@@ -122,7 +122,7 @@ export default function KuisionerPerawatPage() {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Hapus kuisioner?</AlertDialogTitle>
+            <AlertDialogTitle>Hapus kuesioner?</AlertDialogTitle>
             <AlertDialogDescription>Semua pertanyaan dan jawaban responden akan ikut terhapus permanen.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

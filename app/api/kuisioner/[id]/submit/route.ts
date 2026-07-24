@@ -19,7 +19,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       include: { pertanyaan: true },
     })
     if (!kuisioner || !kuisioner.aktif) {
-      return NextResponse.json({ error: "Kuisioner tidak tersedia" }, { status: 404 })
+      return NextResponse.json({ error: "Kuesioner tidak tersedia" }, { status: 404 })
     }
 
     // Sudah pernah mengisi?
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       where: { kuisionerId: id, masyarakatId: masyarakat.id },
     })
     if (sudah) {
-      return NextResponse.json({ error: "Anda sudah mengisi kuisioner ini" }, { status: 400 })
+      return NextResponse.json({ error: "Anda sudah mengisi kuesioner ini" }, { status: 400 })
     }
 
     const body = await req.json()
