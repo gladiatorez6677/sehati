@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Heart, Shield, Brain, MessageCircle, Map, Music, Gamepad, FileText, ChevronRight, Video, PlayCircle, Pill, ClipboardList } from "lucide-react"
 import Link from "next/link"
 import { ArtikelCard } from "@/components/artikel-card"
+import { WelcomeProfileModal } from "@/components/masyarakat/welcome-profile-modal"
 
 const dashboardVideos = [
   {
@@ -130,6 +131,7 @@ export function MasyarakatDashboardContent({ userName, recentArticles }: Masyara
 
   return (
     <div className="p-4 lg:p-8">
+      <WelcomeProfileModal />
       <div className="mb-8">
         <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
           {t('welcome')}, {userName}!
