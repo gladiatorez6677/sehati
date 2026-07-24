@@ -156,33 +156,6 @@ export default function LaporanPage() {
     }
   }
 
-  const downloadReport = async () => {
-    try {
-      const response = await fetch(`/api/laporan/export?type=${reportType}&range=${dateRange}`)
-      if (!response.ok) throw new Error("Failed to generate report")
-      
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `laporan-${reportType}-${dateRange}-${format(new Date(), "yyyy-MM-dd")}.txt`
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      
-      toast({
-        title: "Berhasil",
-        description: "Laporan berhasil diunduh",
-      })
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Gagal mengunduh laporan",
-        variant: "destructive",
-      })
-    }
-  }
-
   const downloadExcel = async () => {
     try {
       const response = await fetch(`/api/laporan/export-excel`)
@@ -228,10 +201,6 @@ export default function LaporanPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button onClick={downloadReport} variant="outline">
-              <Download className="mr-2 h-4 w-4" />
-              Export Laporan
-            </Button>
             <Button onClick={downloadExcel} className="bg-green-600 hover:bg-green-700">
               <Download className="mr-2 h-4 w-4" />
               Unduh Excel (Semua Masyarakat)
